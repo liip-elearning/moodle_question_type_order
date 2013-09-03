@@ -16,9 +16,8 @@ class qtype_order_edit_form extends question_edit_form {
 
     function get_per_answer_fields($mform, $label, $gradeoptions, &$repeatedoptions, &$answersoption) {
         $repeated = array();
-        $repeated[] = $mform->createElement('header', 'answerhdr', $label);
         $repeated[] = $mform->createElement('editor', 'subquestions',
-                get_string('question'), null, $this->editoroptions);
+                $label, null, $this->editoroptions);
         $repeated[] = $mform->createElement('hidden', 'subanswers', '0', null);
         $repeatedoptions['subquestions']['type'] = PARAM_RAW;
         $repeatedoptions['subanswers']['type'] = PARAM_TEXT;
@@ -41,7 +40,7 @@ class qtype_order_edit_form extends question_edit_form {
                 get_string('filloutthreeitems', 'qtype_order'));
         $mform->closeHeaderBefore('answersinstruct');
 
-        $this->add_per_answer_fields($mform, get_string('questionno', 'question', '{no}'), 0);
+        $this->add_per_answer_fields($mform, get_string('itemno', 'qtype_order', '{no}'), 0);
 
         $this->add_combined_feedback_fields(true);
         $this->add_interactive_settings(true, true);
