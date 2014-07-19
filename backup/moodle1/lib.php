@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    qtype
- * @subpackage order
+ * @package    qtype_order
  * @copyright  2011 David Mudrak <david@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +23,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Order question type conversion handler
+ * Order question type conversion handler.
  */
 class moodle1_qtype_order_handler extends moodle1_qtype_handler {
 
@@ -34,19 +32,20 @@ class moodle1_qtype_order_handler extends moodle1_qtype_handler {
      */
     public function get_question_subpaths() {
         return array(
+            'ORDEROPTIONS',
             'ORDERS/ORDER'
         );
     }
 
     /**
-     * Appends the order specific information to the question
+     * Appends the order specific information to the question.
      */
     public function process_question(array $data, array $raw) {
         global $CFG;
 
-        // populate the list of orders first to get their ids
-        // note that the field is re-populated on restore anyway but let us
-        // do our best to produce valid backup files
+        // Populate the list of orders first to get their ids.
+        // Note that the field is re-populated on restore anyway but let us
+        // do our best to produce valid backup files.
         $orderids = array();
         if (isset($data['orders']['order'])) {
             foreach ($data['orders']['order'] as $order) {
@@ -54,18 +53,18 @@ class moodle1_qtype_order_handler extends moodle1_qtype_handler {
             }
         }
 
-        // convert order options
+        // Convert order options.
         $orderoptions = array();
         $orderoptions['id'] = $this->converter->get_nextid();
         $orderoptions['subquestions'] = implode(',', $orderids);
 		$orderoptions['horizontal'] = $data['horizontal'];
         $this->write_xml('orderoptions', $orderoptions, array('/orderoptions/id'));
 
-        // convert orders
+        // Convert orders.
         $this->xmlwriter->begin_tag('orders');
         if (isset($data['orders']['order'])) {
             foreach ($data['orders']['order'] as $order) {
-                // replay the upgrade step 2009072100
+                // Replay the upgrade step 2009072100.
                 $order['questiontextformat'] = 0;
                 if ($CFG->texteditors !== 'textarea' and $data['oldquestiontextformat'] == FORMAT_MOODLE) {
                     $order['questiontext'] = text_to_html($order['questiontext'], false, false, true);
@@ -77,6 +76,8 @@ class moodle1_qtype_order_handler extends moodle1_qtype_handler {
 					$order['answertextformat'] = $data['oldquestiontextformat'];
                 }
 
+                $order['questiontext'] = $this->migrate_files(
+                        $order['questiontext'], 'qtype_order', 'subquestion', $order['id']);
                 $this->write_xml('order', $order, array('/order/id'));
             }
         }

@@ -1,7 +1,7 @@
 <?php
 
 // This file keeps track of upgrades to
-// the match qtype plugin
+// the order qtype plugin
 //
 // Sometimes, changes between versions involve
 // alterations to database structures and other
@@ -64,7 +64,7 @@ function xmldb_qtype_order_upgrade($oldversion) {
             $rs->close();
         }
 
-        // match savepoint reached
+        // order savepoint reached
         upgrade_plugin_savepoint(true, 2011010400, 'qtype', 'order');
     }
 
@@ -156,7 +156,7 @@ function xmldb_qtype_order_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // match savepoint reached
+        // order savepoint reached
         upgrade_plugin_savepoint(true, 2011080900, 'qtype', 'order');
     }
     

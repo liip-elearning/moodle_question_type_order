@@ -20,17 +20,6 @@ defined('MOODLE_INTERNAL') || die();
 class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
 
     protected function can_use_drag_and_drop() {
-        global $USER;
-
-        $ie = check_browser_version('MSIE', 6.0);
-        $ff = check_browser_version('Gecko', 20051106);
-        $op = check_browser_version('Opera', 9.0);
-        $sa = check_browser_version('Safari', 412);
-        $ch = check_browser_version('Chrome', 6);
-
-        if ((!$ie && !$ff && !$op && !$sa && !$ch) or !empty($USER->screenreader)) {
-            return false;
-        }
 
         return true;
     }
