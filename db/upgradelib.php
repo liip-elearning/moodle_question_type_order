@@ -1,10 +1,23 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Upgrade library code for the match question type.
+ * Upgrade library code for the order question type.
  *
- * @package    qtype
- * @subpackage match
+ * @package    qtype_order
  * @copyright  2010 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -81,7 +94,7 @@ class qtype_order_qe2_attempt_updater extends question_qtype_attempt_updater {
         foreach ($bits as $bit) {
             $data = explode('-', $bit);
 
-           // ignore the "no" or "yes" piece
+            // Ignore the "no" or "yes" piece.
             if (count($data) == 2) {
                 list($stem, $choice) = $data;
                 if (isset($this->code2subid[$stem])) {
@@ -151,7 +164,7 @@ class qtype_order_qe2_attempt_updater extends question_qtype_attempt_updater {
         if (null === $this->stemorder && $answer) {
             $bits = explode(',', $answer);
             foreach ($bits as $bit) {
-                //todo: fix this, not always two pieces here
+                // Todo: fix this, not always two pieces here.
                 $data = explode('-', $bit);
                 if (count($data) == 2) {
                     $stem = $data[0];
@@ -166,7 +179,7 @@ class qtype_order_qe2_attempt_updater extends question_qtype_attempt_updater {
         $this->choiceorder = array_keys($this->choices);
         $answertexts = array_flip($this->choices);
         ksort($answertexts);
-        $choiceorder = array_values($answertexts);  // gets the subquestion ids in the order defined by the answertext field
+        $choiceorder = array_values($answertexts);  // Gets the subquestion ids in the order defined by the answertext field.
         $data['_stemorder'] = implode(',', $this->get_stemorder($state->answer));
         $data['_choiceorder'] = implode(',', $choiceorder);
     }

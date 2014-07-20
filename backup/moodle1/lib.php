@@ -57,7 +57,7 @@ class moodle1_qtype_order_handler extends moodle1_qtype_handler {
         $orderoptions = array();
         $orderoptions['id'] = $this->converter->get_nextid();
         $orderoptions['subquestions'] = implode(',', $orderids);
-		$orderoptions['horizontal'] = $data['horizontal'];
+        $orderoptions['horizontal'] = $data['horizontal'];
         $this->write_xml('orderoptions', $orderoptions, array('/orderoptions/id'));
 
         // Convert orders.
@@ -69,11 +69,11 @@ class moodle1_qtype_order_handler extends moodle1_qtype_handler {
                 if ($CFG->texteditors !== 'textarea' and $data['oldquestiontextformat'] == FORMAT_MOODLE) {
                     $order['questiontext'] = text_to_html($order['questiontext'], false, false, true);
                     $order['questiontextformat'] = FORMAT_HTML;
-					$order['answertext'] = text_to_html($order['answertext'], false, false, true);
+                    $order['answertext'] = text_to_html($order['answertext'], false, false, true);
                     $order['answertextformat'] = FORMAT_HTML;
                 } else {
                     $order['questiontextformat'] = $data['oldquestiontextformat'];
-					$order['answertextformat'] = $data['oldquestiontextformat'];
+                    $order['answertextformat'] = $data['oldquestiontextformat'];
                 }
 
                 $order['questiontext'] = $this->migrate_files(

@@ -1,10 +1,23 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Order question renderer class.
  *
- * @package    qtype
- * @subpackage order
+ * @package    qtype_order
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -37,7 +50,9 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
         $o .= $this->construct_ablock_select($qa, $options);
         $o .= html_writer::end_tag('div');
 
-        if ($this->can_use_drag_and_drop()) $o .= html_writer::tag('div', '', array('class' => 'clearer'));
+        if ($this->can_use_drag_and_drop()) {
+            $o .= html_writer::tag('div', '', array('class' => 'clearer'));
+        }
 
         if ($qa->get_state() == question_state::$invalid) {
             $o .= html_writer::nonempty_tag('div',
@@ -54,20 +69,20 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
 
             global $PAGE;
             $PAGE->requires->js_init_call('M.order.Init',
-                                          array($initparams),
-                                          FALSE,
-                                          array('name' => 'order',
-                                                'fullpath' => '/question/type/order/order.js',
-                                                'requires' => array('yui2-yahoo', 'yui2-event', 'yui2-dom', 'yui2-dragdrop', 'yui2-animation')));
+                    array($initparams),
+                    false,
+                    array('name' => 'order',
+                    'fullpath' => '/question/type/order/order.js',
+                    'requires' => array('yui2-yahoo', 'yui2-event', 'yui2-dom', 'yui2-dragdrop', 'yui2-animation')));
 
         }
-        
+
         return $o;
     }
-    
+
     private function construct_ablock_select(question_attempt $qa,
             question_display_options $options) {
-        
+
         $question = $qa->get_question();
         $response = $qa->get_last_qt_data();
         $stemorder = $question->get_stem_order();
@@ -88,10 +103,12 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
 
             $classes = 'control';
             $feedback = $this->get_feedback_class_image($qa, $options, $key);
-            if ($feedback->class) $classes .= ' '.$feedback->class;
+            if ($feedback->class) {
+                $classes .= ' '.$feedback->class;
+            }
 
             $selected = $this->get_selected($question, $response, $key);
-            
+
             $o .= html_writer::tag('td',
                     html_writer::select($choices, $qa->get_qt_field_name($question->get_field_name($key)), $selected,
                             array('0' => 'choose'), array('disabled' => $options->readonly)) .
@@ -108,7 +125,7 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
 
     private function construct_ablock_dragable(question_attempt $qa,
         question_display_options $options) {
-        
+
         $question = $qa->get_question();
         $response = $qa->get_last_qt_data();
 
@@ -120,31 +137,41 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
             $attributes = array(
                     'id' => 'li_'.$question->id.'_'.$stemorderkey,
                     'name' => $qa->get_qt_field_name($question->get_field_name($stemorderkey)));
-            
+
             $feedback = $this->get_feedback_class_image($qa, $options, $stemorderkey);
-            
-            if ($feedback->class) $attributes['class'] = $feedback->class;
-            
+
+            if ($feedback->class) {
+                $attributes['class'] = $feedback->class;
+            }
+
             $stemcontent = $question->format_text(
                     $question->stems[$stemid], $question->stemformat[$stemid],
                     $qa, 'qtype_order', 'subquestion', $stemid);
-            
+
             $o .= html_writer::tag('li', $stemcontent.' '.$feedback->image, $attributes);
         }
         $classes = 'draglist';
-        if ($options->readonly) $classes .= ' readonly';
-        if ($question->horizontal) $classes .= ' inline';
+        if ($options->readonly) {
+            $classes .= ' readonly';
+        }
+        if ($question->horizontal) {
+            $classes .= ' inline';
+        }
         $fieldname = $question->get_dontknow_field_name();
-        if (array_key_exists($fieldname, $response) and $response[$fieldname]) $classes .= ' deactivateddraglist';
+        if (array_key_exists($fieldname, $response) and $response[$fieldname]) {
+            $classes .= ' deactivateddraglist';
+        }
         $o .= html_writer::tag('div', '', array('class' => 'clearer'));
         $o = html_writer::tag('ul', $o, array('id' => 'ul_'.$question->id, 'class' => $classes));
-        
+
         $attributes = array(
                 'id'        => 'ch_'.$question->id,
                 'name'      => $qa->get_qt_field_name($fieldname),
                 'type'      => 'checkbox',
                 'onClick'   => "M.order.OnClickDontKnow($question->id)");
-        if (array_key_exists($fieldname, $response) and $response[$fieldname]) $attributes['checked'] = 'on';
+        if (array_key_exists($fieldname, $response) and $response[$fieldname]) {
+            $attributes['checked'] = 'on';
+        }
         $o .= html_writer::empty_tag('input', $attributes);
         $o .= ' '.get_string('defaultresponse', 'qtype_order');
 
@@ -157,10 +184,10 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
                     'value' => $key + 1);
             $o .= html_writer::empty_tag('input', $attributes);
         }
-        
+
         return $o;
     }
-    
+
     private function get_selected($question, $response, $key) {
         if (array_key_exists($question->get_field_name($key), $response)) {
             return $response[$question->get_field_name($key)];
@@ -168,17 +195,17 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
             return 0;
         }
     }
-    
+
     private function get_feedback_class_image(question_attempt $qa,
         question_display_options $options, $key) {
-        
+
         $question = $qa->get_question();
         $response = $qa->get_last_qt_data();
         $stemorder = $question->get_stem_order();
         $stemid = $stemorder[$key];
 
         $ret = new stdClass();
-        
+
         $ret->class = null;
         $ret->image = '';
 
@@ -190,10 +217,10 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
             $ret->class = $this->feedback_class($fraction);
             $ret->image = $this->feedback_image($fraction);
         }
-        
+
         return $ret;
     }
-    
+
     private function get_selected_stemorder($qa) {
         $question = $qa->get_question();
         $response = $qa->get_last_qt_data();
@@ -201,12 +228,14 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
         $selectedstemorder = array();
         foreach ($question->get_stem_order() as $key => $stemid) {
             $choicenum = $this->get_selected($question, $response, $key);
-            
-            if ($choicenum == 0) return $question->get_stem_order();
+
+            if ($choicenum == 0) {
+                return $question->get_stem_order();
+            }
             $selectedstemorder[$choicenum - 1] = $stemid;
         }
         ksort($selectedstemorder);
-        
+
         return $selectedstemorder;
     }
 
@@ -223,11 +252,13 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
     }
 
     public function correct_response(question_attempt $qa) {
-        if ($qa->get_state()->is_correct()) return '';
+        if ($qa->get_state()->is_correct()) {
+            return '';
+        }
 
         $question = $qa->get_question();
         $choices = $question->get_choice_order();
-        
+
         if (count($choices)) {
             $table = new html_table();
             $table->attributes['class'] = 'generaltable correctanswertable';
@@ -239,7 +270,7 @@ class qtype_order_renderer extends qtype_with_combined_feedback_renderer {
 
             return get_string('correctansweris', 'qtype_match', html_writer::table($table));
         }
-        
+
         return '';
     }
 }

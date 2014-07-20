@@ -38,7 +38,7 @@ class restore_qtype_order_plugin extends restore_qtype_plugin {
 
         $paths = array();
 
-        // Add own qtype stuff
+        // Add own qtype stuff.
         $elename = 'orderoptions';
         // We used get_recommended_name() so this works.
         $elepath = $this->get_pathfor('/orderoptions');
@@ -190,7 +190,7 @@ class restore_qtype_order_plugin extends restore_qtype_plugin {
     public function after_execute_question() {
         global $DB;
         // Now that all the question_order_subs have been restored, let's process
-        // the created question_order subquestions (list of question_order_sub ids)
+        // the created question_order subquestions (list of question_order_sub ids).
         $rs = $DB->get_recordset_sql("SELECT qm.id, qm.subquestions
                                         FROM {question_order} qm
                                         JOIN {backup_ids_temp} bi ON bi.newitemid = qm.question

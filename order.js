@@ -95,7 +95,7 @@ var MoodleDDListItem_extend = {
                 Dom.setStyle(thisid, "visibility", "");
             });
         a.animate();
-        
+
         M.order.SetHiddens(thisid);
     },
 
@@ -163,7 +163,9 @@ M.order.Init = function(Y, vars) {
     var ablock = Dom.get("ablock_" + vars.qid);
     ablock.innerHTML = vars.ablockcontent;
 
-    if (vars.readonly) return;
+    if (vars.readonly) {
+        return;
+    }
 
     for (i = 0; i < vars.stemscount; i = i + 1) {
         new MoodleDDListItem('li_' + vars.qid + '_' + i, vars.qid);
@@ -173,7 +175,7 @@ M.order.Init = function(Y, vars) {
 M.order.SetHiddens = function(liid) {
     var Dom = YAHOO.util.Dom;
     var items = Dom.get(liid).parentNode.getElementsByTagName("li");
-    
+
     for (i = 0; i < items.length; i = i + 1) {
         inputhidden = Dom.get(items[i].getAttribute("name"));
         inputhidden.value = i + 1;
@@ -184,7 +186,7 @@ M.order.OnClickDontKnow = function(qid) {
     var Dom = YAHOO.util.Dom;
     var ch = Dom.get('ch_' + qid);
     var ul = Dom.get('ul_' + qid);
-    
+
     if (ch.checked) {
         Dom.addClass(ul, "deactivateddraglist");
         Dom.removeClass(ul, "draglist");
@@ -270,7 +272,5 @@ function createElementWithNameandType(type, name, typeattr) {
 
     return element;
 }
-
-
 
 })();
